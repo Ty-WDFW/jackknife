@@ -41,7 +41,7 @@ def view():
 
     if request.method == 'GET':
         data = pd.read_json(session['data'])
-        return render_template('view.html', columns=data.columns, data=test)
+        return render_template('view.html', columns=data.columns, data=data)
 
     if request.method == 'POST':
         selected_year = request.form['year']
