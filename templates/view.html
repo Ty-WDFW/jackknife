@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <div>
+        <div>Preview</div>
+        {{ data.head().to_html() | safe }}
+    </div>
+    <div>
+        <form action="{{url_for('view')}}" method="post">
+            <label for="year">Select column for year</label>
+            <select id="year" name="year">
+                {% for column in columns %}
+                    <option value="{{ column | safe}}">{{ column | safe}}</option>
+                {% endfor %}
+            </select>
+            <label for="runsize">Select column for run size</label>
+            <select id="runsize" name="runsize">
+                {% for column in columns %}
+                    <option value="{{ column | safe}}">{{ column | safe}}</option>
+                {% endfor %}
+            </select>
+            <label for="predictor">Select column for predictor</label>
+            <select id="predictor" name="predictor">
+                {% for column in columns %}
+                    <option value="{{ column | safe}}">{{ column | safe}}</option>
+                {% endfor %}
+            </select>
+            <button>Submit</button>
+        </form>
+    </div>
+</head>
+<body>
+
+</body>
+</html>
