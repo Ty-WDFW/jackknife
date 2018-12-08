@@ -40,8 +40,8 @@ def view():
         return redirect(url_for('main'))
 
     if request.method == 'GET':
-        test = pd.read_json(session['data'])
-        return render_template('view.html', columns=test.columns, data=test)
+        data = pd.read_json(session['data'])
+        return render_template('view.html', columns=data.columns, data=test)
 
     if request.method == 'POST':
         selected_year = request.form['year']
