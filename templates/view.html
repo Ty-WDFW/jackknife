@@ -50,6 +50,10 @@
             <h1>Full DataFrame</h1>
             {{ results.dataframe.to_html() | safe }}
         </div>
+        <div>
+            <h1>Graph</h1>
+            <img src="{{ results.graph }}">
+        </div>
     {% endif %}
     </div>
 </head>
