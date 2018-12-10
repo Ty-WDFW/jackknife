@@ -1,13 +1,10 @@
 import pandas as pd
 import numpy as np
-
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
-
 import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
-
 import io
 import base64
 
@@ -31,8 +28,8 @@ def JackKnife(dataframe=None, predictor_column=None, result_column=None, year_co
         raise ValueError('No dataframe')
     df = pd.read_json(dataframe)
 
-    df['Year'] = pd.to_datetime(df['Year'], format='%Y')
-    df.sort_values('Year', inplace=True)
+    df[year_column] = pd.to_datetime(df[year_column], format='%Y')
+    df.sort_values(year_column, inplace=True)
     print(df)
 
     predictor_mean = df[predictor_column].mean()
@@ -83,7 +80,7 @@ def JackKnife(dataframe=None, predictor_column=None, result_column=None, year_co
 
 
     img = io.BytesIO()
-    plot_df = df.set_index('Year')
+    plot_df = df.set_index(year_column)
     fig, ax = plt.subplots()
     ax.plot(plot_df[result_column], '--.', label='Observed')
     ax.plot(plot_df['pred_y'], '--.', label='Estimated')

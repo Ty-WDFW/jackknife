@@ -3,7 +3,7 @@ from stats.jackknife import JackKnife
 import pandas as pd
 
 
-ALLOWED_EXTENSIONS = set(['csv', 'xlsx'])
+ALLOWED_EXTENSIONS = {'csv', 'xlsx'}
 
 
 def allowed_file(filename):
