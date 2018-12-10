@@ -95,7 +95,7 @@ def JackKnife(dataframe=None, predictor_column=None, result_column=None, year_co
     graph_url = base64.b64encode(img.getvalue()).decode()
     plt.close()
 
-    results = {'mre': mre, 'maSe': mae,
+    results = {'mre': mre, 'mae': mae,
                'rmse': rmse, 'mpe': mpe,
                'mape': mape, 'dataframe': df.reset_index(drop=True),
                'graph': 'data:image/png;base64,{}'.format(graph_url)}

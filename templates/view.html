@@ -8,6 +8,7 @@
         {{ data.head().to_html() | safe }}
     </div>
     <div>
+        <h1>Select Columns</h1>
         <form action="{{url_for('view')}}" method="post">
             <label for="year">Select column for year</label>
             <select id="year" name="year">

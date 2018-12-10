@@ -3,7 +3,7 @@ from stats.jackknife import JackKnife
 import pandas as pd
 
 
-ALLOWED_EXTENSIONS = set(['csv'])
+ALLOWED_EXTENSIONS = set(['csv', 'xlsx'])
 
 
 def allowed_file(filename):
@@ -11,7 +11,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'my_secret_key'
+app.config['SECRET_KEY'] = 'some_crazy_secret_key'
 
 
 @app.route('/')
@@ -30,7 +30,12 @@ def upload():
     if file and allowed_file(file.filename):
         #if file is good read it and convert it into json
         #to be stored in session
-        DataFrame = pd.read_csv(file)
+        #read csv, excel
+        if file.filename.rsplit('.', 1)[1].lower() == 'csv':
+            DataFrame = pd.read_csv(file)
+        elif file.filename.rsplit('.', 1)[1].lower() == 'xlsx':
+            DataFrame = pd.read_excel(file)
+
         session['data'] = DataFrame.to_json()
         return redirect(url_for('view'))
 
