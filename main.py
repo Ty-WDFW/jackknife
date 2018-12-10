@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session
+from stats.jackknife import JackKnife
 import pandas as pd
 
 
@@ -15,8 +16,7 @@ app.config['SECRET_KEY'] = 'my_secret_key'
 
 @app.route('/')
 def main():
-    if session['data']:
-        session['data'] = None
+
     return render_template('index.html')
 
 @app.route('/upload', methods=['POST'])
@@ -39,20 +39,27 @@ def view():
     if session['data'] is None:
         return redirect(url_for('main'))
 
+    data = session['data']
+    data_df = pd.read_json(data)
     if request.method == 'GET':
-        test = pd.read_json(session['data'])
-        return render_template('view.html', columns=test.columns, data=test)
+        return render_template('view.html', columns=data_df.columns, data=data_df)
 
     if request.method == 'POST':
         selected_year = request.form['year']
         selected_runsize = request.form['runsize']
         selected_predictor = request.form['predictor']
 
-        session['year_selected_column'] = selected_year
-        session['runsize_selected_column'] = selected_runsize
-        session['predictor_selected_column'] = selected_predictor
+        # session['year_selected_column'] = selected_year
+        # session['runsize_selected_column'] = selected_runsize
+        # session['predictor_selected_column'] = selected_predictor
 
-        return str(selected_year)
+        results = JackKnife(data, predictor_column=selected_predictor, result_column=selected_runsize,
+                            year_column=selected_year)
+
+        return render_template('view.html', results=results, columns=data_df.columns, data=data_df,
+                               selected_year=selected_year, selected_runsize=selected_runsize,
+                               selected_predictor=selected_predictor)
+
 
 if __name__ == "__main__":
     # Only for debugging while developing

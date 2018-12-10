@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <div>
-        <div>Preview</div>
+        <h1>Preview</h1>
         {{ data.head().to_html() | safe }}
     </div>
     <div>
@@ -12,23 +12,45 @@
             <label for="year">Select column for year</label>
             <select id="year" name="year">
                 {% for column in columns %}
-                    <option value="{{ column | safe}}">{{ column | safe}}</option>
+                    <option value="{{ column | safe}}"
+                            {% if column == selected_year %} selected {% endif %}
+                        >{{ column | safe}}</option>
                 {% endfor %}
             </select>
             <label for="runsize">Select column for run size</label>
             <select id="runsize" name="runsize">
                 {% for column in columns %}
-                    <option value="{{ column | safe}}">{{ column | safe}}</option>
+                    <option value="{{ column | safe}}"
+                            {% if column == selected_runsize %} selected {% endif %}
+                       >{{ column | safe}}</option>
                 {% endfor %}
             </select>
             <label for="predictor">Select column for predictor</label>
             <select id="predictor" name="predictor">
                 {% for column in columns %}
-                    <option value="{{ column | safe}}">{{ column | safe}}</option>
+                    <option value="{{ column | safe}}"
+                            {% if column == selected_predictor %} selected {% endif %}
+                       >{{ column | safe}}</option>
                 {% endfor %}
             </select>
             <button>Submit</button>
         </form>
+    {%  if results %}
+        <div>
+            <h1>Metrics</h1>
+            <ul>
+                <li>MRE: {{ results.mre }}</li>
+                <li>MAE: {{ results.mae }}</li>
+                <li>RMSE: {{ results.rmse }}</li>
+                <li>MPE: {{ results.mpe }}</li>
+                <li>MAPE: {{ results.mape }}</li>
+            </ul>
+        </div>
+        <div>
+            <h1>Full DataFrame</h1>
+            {{ results.dataframe.to_html() | safe }}
+        </div>
+    {% endif %}
     </div>
 </head>
 <body>
