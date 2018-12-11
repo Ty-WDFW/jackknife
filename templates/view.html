@@ -1,64 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <meta charset="UTF-8">
     <title>Title</title>
-    <div>
+</head>
+<body>
+    <div class="container">
         <h1>Preview</h1>
-        {{ data.head().to_html() | safe }}
-    </div>
+        {{ data.head().to_html(classes="table table-striped text-center") | safe }}
     <div>
         <h1>Select Columns</h1>
         <form action="{{url_for('view')}}" method="post">
+            <div class="form-group">
             <label for="year">Select column for year</label>
-            <select id="year" name="year">
+            <select class="form-control" id="year" name="year">
                 {% for column in columns %}
                     <option value="{{ column | safe}}"
                             {% if column == selected_year %} selected {% endif %}
                         >{{ column | safe}}</option>
                 {% endfor %}
             </select>
+            </div>
+            <div class="form-group">
             <label for="runsize">Select column for run size</label>
-            <select id="runsize" name="runsize">
+            <select class="form-control" id="runsize" name="runsize">
                 {% for column in columns %}
                     <option value="{{ column | safe}}"
                             {% if column == selected_runsize %} selected {% endif %}
                        >{{ column | safe}}</option>
                 {% endfor %}
             </select>
+            </div>
+            <div class="form-group">
             <label for="predictor">Select column for predictor</label>
-            <select id="predictor" name="predictor">
+            <select class="form-control" id="predictor" name="predictor">
                 {% for column in columns %}
                     <option value="{{ column | safe}}"
                             {% if column == selected_predictor %} selected {% endif %}
                        >{{ column | safe}}</option>
                 {% endfor %}
             </select>
-            <button>Submit</button>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     {%  if results %}
-        <div>
             <h1>Metrics</h1>
-            <ul>
-                <li>MRE: {{ results.mre }}</li>
-                <li>MAE: {{ results.mae }}</li>
-                <li>RMSE: {{ results.rmse }}</li>
-                <li>MPE: {{ results.mpe }}</li>
-                <li>MAPE: {{ results.mape }}</li>
+            <div class="row">
+            <ul class="list-group">
+                <li class="list-group-item">MRE: {{ "%.6f" | format(results.mre) }}</li>
+                <li class="list-group-item">MAE: {{"%.6f" | format(results.mae) }}</li>
+                <li class="list-group-item">RMSE: {{"%.6f" | format(results.rmse) }}</li>
+                <li class="list-group-item">MPE: {{"%.6f" | format(results.mpe) }}</li>
+                <li class="list-group-item">MAPE: {{"%.6f" | format(results.mape) }}</li>
             </ul>
-        </div>
-        <div>
-            <h1>Full DataFrame</h1>
-            {{ results.dataframe.to_html() | safe }}
+            <ul class="list-group">
+                <li class="list-group-item">R<sup>2</sup>: {{ "%.2f" | format(results.r2) }}</li>
+                <li class="list-group-item">Coeffecient: {{"%.6f" | format(results.coeff) }}</li>
+                <li class="list-group-item">Predictor Mean: {{"%.6f" | format(results.predictor_mean) }}</li>
+                <li class="list-group-item">Result Mean: {{"%.6f" | format(results.result_mean) }}</li>
+            </ul>
         </div>
         <div>
             <h1>Graph</h1>
             <img src="{{ results.graph }}">
         </div>
+        <!--<div>-->
+            <!--<h1>Full DataFrame</h1>-->
+            <!--{{ results.dataframe.to_html(classes="table") | safe }}-->
+        <!--</div>-->
     {% endif %}
     </div>
-</head>
-<body>
-
+    </div>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>

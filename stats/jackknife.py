@@ -13,6 +13,7 @@ sns.set_style('darkgrid')
 
 def JackKnife(dataframe=None, predictor_column=None, result_column=None, year_column=None):
 
+
     '''
     :param dataframe: json dataframe
     :param predictor_column: column that holds the predictor
@@ -30,7 +31,6 @@ def JackKnife(dataframe=None, predictor_column=None, result_column=None, year_co
 
     df[year_column] = pd.to_datetime(df[year_column], format='%Y')
     df.sort_values(year_column, inplace=True)
-    print(df)
 
     predictor_mean = df[predictor_column].mean()
     result_mean = df[result_column].mean()
@@ -51,7 +51,7 @@ def JackKnife(dataframe=None, predictor_column=None, result_column=None, year_co
     df['intercept'] = np.nan
     df['r2'] = np.nan
 
-    #run the jackknife
+    # run the jackknife
     for index, row in df.iterrows():
         result = df[~(df.index == index)][result_column].values.reshape(-1, 1)
         predictor = df[~(df.index == index)][predictor_column].values.reshape(-1, 1)
@@ -76,8 +76,7 @@ def JackKnife(dataframe=None, predictor_column=None, result_column=None, year_co
     mpe = df['pe'].mean() * 100
     mape = df['ape'].mean() * 100
 
-    #plot this bad boy
-
+    # plot this bad boy
 
     img = io.BytesIO()
     plot_df = df.set_index(year_column)
@@ -92,14 +91,9 @@ def JackKnife(dataframe=None, predictor_column=None, result_column=None, year_co
     graph_url = base64.b64encode(img.getvalue()).decode()
     plt.close()
 
-    results = {'mre': mre, 'mae': mae,
-               'rmse': rmse, 'mpe': mpe,
+    results = {'mre': mre, 'mae': mae, 'coeff': coeff, 'result_mean': result_mean,
+               'rmse': rmse, 'mpe': mpe, 'r2': r2, 'predictor_mean': predictor_mean,
                'mape': mape, 'dataframe': df.reset_index(drop=True),
                'graph': 'data:image/png;base64,{}'.format(graph_url)}
 
     return results
-
-
-
-
-
