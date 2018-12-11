@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Results</title>
 </head>
 <body>
     <div class="container">
-        <h1>Preview</h1>
-        {{ data.head().to_html(classes="table table-striped text-center") | safe }}
-    <div>
-        <h1>Select Columns</h1>
+        <h3>Preview</h3>
+        <div class="row">
+        {{ data.head().to_html(classes="table table-striped text-center", index=False, justify="center") | safe }}
+        </div>
+        <h3>Select Columns</h3>
         <form action="{{url_for('view')}}" method="post">
             <div class="form-group">
             <label for="year">Select column for year</label>
@@ -42,10 +44,10 @@
                 {% endfor %}
             </select>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary float-right">Submit</button>
         </form>
     {%  if results %}
-            <h1>Metrics</h1>
+            <h3>Metrics</h3>
             <div class="row">
             <ul class="list-group">
                 <li class="list-group-item">MRE: {{ "%.6f" | format(results.mre) }}</li>
@@ -62,7 +64,7 @@
             </ul>
         </div>
         <div>
-            <h1>Graph</h1>
+            <h3>Graph</h3>
             <img src="{{ results.graph }}">
         </div>
         <!--<div>-->

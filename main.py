@@ -45,7 +45,8 @@ def view():
         return redirect(url_for('main'))
 
     data = session['data']
-    data_df = pd.read_json(data)
+    print(data)
+    data_df = pd.read_json(data).sort_values('Year')
     if request.method == 'GET':
         return render_template('view.html', columns=data_df.columns, data=data_df)
 
