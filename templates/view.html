@@ -13,39 +13,43 @@
         {{ data.head().to_html(classes="table table-striped text-center", index=False, justify="center") | safe }}
         </div>
         <h3>Select Columns</h3>
-        <form action="{{url_for('view')}}" method="post">
-            <div class="form-group">
-            <label for="year">Select column for year</label>
-            <select class="form-control" id="year" name="year">
-                {% for column in columns %}
-                    <option value="{{ column | safe}}"
-                            {% if column == selected_year %} selected {% endif %}
-                        >{{ column | safe}}</option>
-                {% endfor %}
-            </select>
+        <div class="row">
+            <div class="col text-center">
+                <form action="{{url_for('view')}}" method="post">
+                    <div class="form-group">
+                    <label for="year">Select column for year</label>
+                    <select class="form-control" id="year" name="year">
+                        {% for column in columns %}
+                            <option value="{{ column | safe}}"
+                                    {% if column == selected_year %} selected {% endif %}
+                                >{{ column | safe}}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                    <div class="form-group">
+                    <label for="runsize">Select column for run size</label>
+                    <select class="form-control" id="runsize" name="runsize">
+                        {% for column in columns %}
+                            <option value="{{ column | safe}}"
+                                    {% if column == selected_runsize %} selected {% endif %}
+                               >{{ column | safe}}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                    <div class="form-group">
+                    <label for="predictor">Select column for predictor</label>
+                    <select class="form-control" id="predictor" name="predictor">
+                        {% for column in columns %}
+                            <option value="{{ column | safe}}"
+                                    {% if column == selected_predictor %} selected {% endif %}
+                               >{{ column | safe}}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary float-right">Submit</button>
+                </form>
             </div>
-            <div class="form-group">
-            <label for="runsize">Select column for run size</label>
-            <select class="form-control" id="runsize" name="runsize">
-                {% for column in columns %}
-                    <option value="{{ column | safe}}"
-                            {% if column == selected_runsize %} selected {% endif %}
-                       >{{ column | safe}}</option>
-                {% endfor %}
-            </select>
-            </div>
-            <div class="form-group">
-            <label for="predictor">Select column for predictor</label>
-            <select class="form-control" id="predictor" name="predictor">
-                {% for column in columns %}
-                    <option value="{{ column | safe}}"
-                            {% if column == selected_predictor %} selected {% endif %}
-                       >{{ column | safe}}</option>
-                {% endfor %}
-            </select>
-            </div>
-            <button type="submit" class="btn btn-primary float-right">Submit</button>
-        </form>
+        </div>
     {%  if results %}
             <h3>Metrics</h3>
             <div class="row">
@@ -67,12 +71,41 @@
                     </ul>
                 </div>
         </div>
-        <div>
-            <h3>Graph</h3>
-                <div class="text-center">
-                    <img src="{{ results.graph }}" class="img-fluid">
-                </div>
+        <h3>Graph</h3>
+        <div class="row">
+            <div class="col text-center">
+                <img src="{{ results.graph }}" class="img-fluid">
+            </div>
         </div>
+
+        <h3>Table</h3>
+        <div class="row">
+            <table class="table text-center">
+                <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th>Observed</th>
+                        <th>Estimated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in results.color_table.iterrows() %}
+                     <tr style="background-color:
+                     rgba({{ value['rgb'][0] }},
+                          {{ value['rgb'][1] }},
+                          {{ value['rgb'][2] }},
+                          .5)">
+                         <td> {{ value[selected_year].strftime('%Y') }}</td>
+                         <td> {{ "%.5f" | format(value[selected_runsize]) }}</td>
+                         <td> {{ "%.5f" | format(value['pred_y']) }}</td>
+                     </tr>
+                     {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+
         <!--<div>-->
             <!--<h1>Full DataFrame</h1>-->
             <!--{{ results.dataframe.to_html(classes="table") | safe }}-->

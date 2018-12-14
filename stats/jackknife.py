@@ -4,6 +4,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 import matplotlib
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 import seaborn as sns
 import io
 import base64
@@ -93,9 +94,29 @@ def JackKnife(dataframe=None, predictor_column=None, result_column=None, year_co
 
     df.sort_values(year_column, inplace=True)
 
+    #color mapped table
+
+    color_map = df[[year_column, result_column, 'pred_y']].copy()
+
+    color_map['difference'] = color_map['pred_y'] - color_map[result_column]
+
+    maxdiff = color_map['difference'].max()
+    mindiff = color_map['difference'].min()
+
+    #normalize the difference
+    norm = matplotlib.colors.Normalize(vmax=maxdiff, vmin=mindiff)
+    #map the difference to RBG
+
+    map = cm.ScalarMappable(norm=norm, cmap=cm.RdBu)
+
+    color_map['rgb'] = color_map['difference'].apply(lambda x: map.to_rgba(x, bytes=True))
+
+    color_table = color_map[[year_column, result_column, 'pred_y', 'rgb']]
+
     results = {'mre': mre, 'mae': mae, 'coeff': coeff, 'result_mean': result_mean,
                'rmse': rmse, 'mpe': mpe, 'r2': r2, 'predictor_mean': predictor_mean,
                'mape': mape, 'dataframe': df.reset_index(drop=True),
-               'graph': 'data:image/png;base64,{}'.format(graph_url)}
+               'graph': 'data:image/png;base64,{}'.format(graph_url), 'color_table': color_table,
+               'year_column': year_column, result_column: result_column}
 
     return results
