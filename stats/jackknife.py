@@ -91,6 +91,8 @@ def JackKnife(dataframe=None, predictor_column=None, result_column=None, year_co
     graph_url = base64.b64encode(img.getvalue()).decode()
     plt.close()
 
+    df.sort_values(year_column, inplace=True)
+
     results = {'mre': mre, 'mae': mae, 'coeff': coeff, 'result_mean': result_mean,
                'rmse': rmse, 'mpe': mpe, 'r2': r2, 'predictor_mean': predictor_mean,
                'mape': mape, 'dataframe': df.reset_index(drop=True),

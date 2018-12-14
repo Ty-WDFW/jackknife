@@ -11,9 +11,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'some_crazy_secret_key'
-
-
+app.secret_key = 'super_duper_secret_key'
 @app.route('/')
 def main():
 
@@ -41,12 +39,11 @@ def upload():
 
 @app.route('/view', methods=['GET', 'POST'])
 def view():
-    if session['data'] is None:
+    if 'data' not in session:
         return redirect(url_for('main'))
 
     data = session['data']
-    print(data)
-    data_df = pd.read_json(data).sort_values('Year')
+    data_df = pd.read_json(data)
     if request.method == 'GET':
         return render_template('view.html', columns=data_df.columns, data=data_df)
 
